@@ -1,15 +1,15 @@
-package fr.uvsq.cprog.dns;
+package fr.uvsq.cprog.collex;
 
 import java.util.Objects;
 
-/** Simple mapping entry: IP <-> FQDN. */
+/** Entrée associant une IP et un nom de machine. */
 public final class DnsItem {
   private final AdresseIP adresse;
   private final NomMachine nom;
 
   public DnsItem(AdresseIP adresse, NomMachine nom) {
-    this.adresse = adresse;
-    this.nom = nom;
+    this.adresse = Objects.requireNonNull(adresse, "adresse");
+    this.nom = Objects.requireNonNull(nom, "nom");
   }
 
   public AdresseIP getAdresse() {
@@ -22,10 +22,14 @@ public final class DnsItem {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof DnsItem)) return false;
-    DnsItem that = (DnsItem) o;
-    return adresse.equals(that.adresse) && nom.equals(that.nom);
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof DnsItem)) {
+      return false;
+    }
+    DnsItem other = (DnsItem) o;
+    return adresse.equals(other.adresse) && nom.equals(other.nom);
   }
 
   @Override

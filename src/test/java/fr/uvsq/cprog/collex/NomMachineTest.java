@@ -1,4 +1,4 @@
-package fr.uvsq.cprog.dns;
+package fr.uvsq.cprog.collex;
 
 import static org.junit.Assert.*;
 import org.junit.Test;

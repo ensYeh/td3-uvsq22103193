@@ -1,4 +1,4 @@
-package fr.uvsq.cprog.dns;
+package fr.uvsq.cprog.collex;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
