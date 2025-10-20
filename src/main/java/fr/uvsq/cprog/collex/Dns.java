@@ -125,18 +125,30 @@ public final class Dns {
 
 
   public List<DnsItem> getItems(String domaine) {
-    if (domaine == null || domaine.isEmpty()) {
-      return List.of();
-    }
+    if (domaine == null || domaine.isEmpty()) return List.of();
     String suffix = "." + domaine;
+
+    // → filtre sur le domaine puis TRI STRICTEMENT PAR IP NUMÉRIQUE CROISSANTE
     return byName.values().stream()
         .filter(it -> {
           String n = it.getNom().toString();
-          return n.endsWith(suffix) || n.equals(domaine);
+          return n.equals(domaine) || n.endsWith(suffix);
         })
-        .sorted(Comparator.comparing(it -> it.getNom().toString()))
+        .sorted(Comparator.comparingLong(it -> ipToLong(it.getAdresse().toString())))
         .collect(Collectors.toList());
   }
+
+  /** Convertit a.b.c.d en entier non signé pour comparer correctement les IPs. */
+  private static long ipToLong(String ip) {
+    String[] p = ip.split("\\.");
+    if (p.length != 4) return Long.MAX_VALUE; // ligne invalide -> pousse à la fin
+    long a = Long.parseLong(p[0]);
+    long b = Long.parseLong(p[1]);
+    long c = Long.parseLong(p[2]);
+    long d = Long.parseLong(p[3]);
+    return (a << 24) | (b << 16) | (c << 8) | d;
+  }
+
 
   /**
    * Ajoute une nouvelle entrée (vérifie l'unicité IP et FQDN) puis persiste.
